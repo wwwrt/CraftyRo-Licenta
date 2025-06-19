@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cd Frontend && npm ci && npm run build
+      - run: |
+          echo "Project ID from secrets is ${{ secrets.VITE_FIREBASE_PROJECT_ID }}"
+          cd Frontend && npm ci && npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
