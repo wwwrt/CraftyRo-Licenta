@@ -14,7 +14,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dependencies and Build
-        run: npm ci && npm run build
+        run: |
+          echo "Project ID is: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}"
+          npm ci && npm run build
         working-directory: ./Frontend
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
