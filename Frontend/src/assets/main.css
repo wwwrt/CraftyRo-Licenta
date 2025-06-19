@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark mode custom styles */
+html.dark {
+  --bg: #111111;
+  --card: #23262f;
+  /* --text: #f5f6fa; */
+  --accent: #ffb86b;
+
+}
+body, #app {
+  background: var(--bg);
+  color: var(--text);
+}
+/* .dark .bg-white { background-color: var(--card) !important; }
+.dark .text-\[\#7f5539\] { color: var(--text) !important; }
+.dark .border-\[\#d4a373\] { border-color: var(--accent) !important; }
+.dark .bg-\[\#faedcd\] { background-color: #23262f !important; }
+.dark .bg-\[\#d4a373\] { background-color: var(--accent) !important; }
+.dark .shadow-xl, .dark .shadow-lg, .dark .shadow-2xl { box-shadow: 0 4px 24px rgba(0,0,0,0.55) !important; } */
+
+/* 1. Searchbar, sortare, categorii: fără margini, fundal #fef3ec, text negru */
+.searchbar-custom,
+.sort-btn-custom,
+.category-btn-custom {
+  background: #fef3ec !important;
+  color: #111 !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background 0.2s, color 0.2s;
+}
+.searchbar-custom::placeholder {
+  color: #888 !important;
+}
+
+/* 2. Card: fundal #583826, text #fef3ec, butoane #fef3ec cu text #583826 */
+.card-bg {
+  background: #fff !important;
+  color: #583826 !important;
+}
+.card-title,
+.card-bg .card-title,
+.card-bg .text,
+.card-bg .buy-btn,
+.card-bg .edit-btn {
+  color: #fef3ec !important;
+}
+.card-bg .buy-btn,
+.card-bg .edit-btn {
+  background: #fef3ec !important;
+  color: #583826 !important;
+  border: none !important;
+}
+.card-bg .buy-btn:hover,
+.card-bg .edit-btn:hover {
+  background: #d4a373 !important;
+  color: #583826 !important;
+}
+
+/* 3. Carousel: fundal titlu #583826, titlu anunt #fef3ec, butoane sageti #fef3ec */
+.carousel-title-bg {
+  background: #583826 !important;
+  color: #fef3ec !important;
+}
+.carousel-arrow {
+  background: #fef3ec !important;
+  color: #583826 !important;
+  border: none !important;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.carousel-arrow:hover {
+  background: #d4a373 !important;
+  color: #583826 !important;
+}
+.carousel-announcement-title {
+  color: #fef3ec !important;
+}
+
+/* 4. Navbar: iconițe #fef3ec, la hover #583826 */
+.navbar-icon {
+  color: #fef3ec !important;
+  transition: color 0.2s;
+}
+.navbar-icon:hover {
+  color: #583826 !important;
+}
+

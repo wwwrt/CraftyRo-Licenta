@@ -1,0 +1,308 @@
+{ 
+  "products": [
+    {
+      "id": 1,
+      "name": "Cercei Handmade",
+      "price": "29.99",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Pălărie Decorată",
+      "price": "45.50",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Set de Pictură pe Sticlă",
+      "price": "60.00",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Tablou Quilling",
+      "price": "120.99",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Cana Personalizată",
+      "price": "35.00",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Lanterna Decupată",
+      "price": "50.00",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Eșarfă Tricotată",
+      "price": "70.00",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Agendă Handmade",
+      "price": "40.00",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 9,
+      "name": "Set de Bijuterii din Mărgele",
+      "price": "85.50",
+      "imageURL": "./images/img1.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Brățară Macramé",
+      "price": "20.00",
+      "imageURL": "./images/img1.jpg"
+    },
+
+    {
+        "id": 11,
+        "name": "Decoratiune din Lemn",
+        "price": "55.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 12,
+        "name": "Cos de Ratan Impletit",
+        "price": "80.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 13,
+        "name": "Lumanari Aromatizate Handmade",
+        "price": "25.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 14,
+        "name": "Set de Farfurii Ceramice",
+        "price": "150.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 15,
+        "name": "Ceas din Lemn Gravat",
+        "price": "110.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 16,
+        "name": "Set de Pernute Decorative",
+        "price": "90.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 17,
+        "name": "Statueta din Argila",
+        "price": "65.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 18,
+        "name": "Jurnal cu Coperta din Piele",
+        "price": "75.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 19,
+        "name": "Cutie de Bijuterii Pictata",
+        "price": "70.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 20,
+        "name": "Suport pentru Carti Handmade",
+        "price": "50.00",
+        "imageURL": "./images/img1.jpg"
+      },
+
+      {
+        "id": 21,
+        "name": "Tablou Abstract Pictat Manual",
+        "price": "120.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 22,
+        "name": "Set de Cani Ceramice Pictate",
+        "price": "65.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 23,
+        "name": "Lampă de Masă din Lemn și Metal",
+        "price": "89.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 24,
+        "name": "Covor Handmade din Bumbac",
+        "price": "130.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 25,
+        "name": "Set de Tacâmuri Personalizate",
+        "price": "100.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 26,
+        "name": "Suport pentru Lumânări",
+        "price": "45.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 27,
+        "name": "Vază Decorativă din Ceramică",
+        "price": "78.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 28,
+        "name": "Placă Decorativă de Perete",
+        "price": "95.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 29,
+        "name": "Cosmetic Bag Handmade",
+        "price": "55.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 30,
+        "name": "Pernă Decorativă cu Broderie",
+        "price": "60.00",
+        "imageURL": "./images/img1.jpg"
+      },
+    
+      {
+        "id": 31,
+        "name": "Ceas de Perete Artizanal",
+        "price": "110.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 32,
+        "name": "Set de Săpunuri Naturale",
+        "price": "40.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 33,
+        "name": "Agendă Personalizată",
+        "price": "55.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 34,
+        "name": "Brelocuri Handmade din Lemn",
+        "price": "20.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 35,
+        "name": "Cercei Handmade din Argint",
+        "price": "75.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 36,
+        "name": "Set de Farfurii Pictate Manual",
+        "price": "150.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 37,
+        "name": "Lanterna Decorativă",
+        "price": "65.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 38,
+        "name": "Suport pentru Bijuterii",
+        "price": "50.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 39,
+        "name": "Cană Termosensibilă Personalizată",
+        "price": "30.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 40,
+        "name": "Pătură Tricotată Manual",
+        "price": "200.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 41,
+        "name": "Cutie de Bijuterii din Lemn Gravat",
+        "price": "120.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 42,
+        "name": "Ghirlandă Decorativă Luminoasă",
+        "price": "90.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 43,
+        "name": "Set de Prosoape Brodate",
+        "price": "80.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 44,
+        "name": "Statuetă Decorativă din Ceramica",
+        "price": "100.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 45,
+        "name": "Felinar din Metal și Sticlă",
+        "price": "70.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 46,
+        "name": "Cos de Rufe țesut Manual",
+        "price": "110.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 47,
+        "name": "Set de Condimente în Suport de Lemn",
+        "price": "60.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 48,
+        "name": "Raft de Perete Asimetric",
+        "price": "85.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 49,
+        "name": "Oglindă Decorativă cu Ramă din Lemn",
+        "price": "150.00",
+        "imageURL": "./images/img1.jpg"
+      },
+      {
+        "id": 50,
+        "name": "Cosmetic Bag din Piele Naturală",
+        "price": "90.00",
+        "imageURL": "./images/img1.jpg"
+      }    
+  ]
+}
+  

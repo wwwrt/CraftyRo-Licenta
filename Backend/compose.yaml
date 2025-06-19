@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  app:
+    build: .docker
+    stdin_open: true
+    tty: true
+    container_name: app.CraftyBackend
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: 'true'
+      CHOKIDAR_INTERVAL: 100
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+    expose:
+      - "3000"
+      - "8080"
+    volumes:
+      - .:/app
+      - /app/.git/
+    working_dir: /app
+    user: 1000:1000
+    networks:
+      - crafty-network
+
+  mysql:
+    image: mysql:8.0.27
+    container_name: my-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: Crafty
+      MYSQL_USER: Crafty
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - crafty-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2.0
+    container_name: pma.Crafty
+    ports:
+      - "4577:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: Crafty
+      PMA_PASSWORD: password
+      UPLOAD_LIMIT: 250M
+    networks:
+      - crafty-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  crafty-network:
+    driver: bridge

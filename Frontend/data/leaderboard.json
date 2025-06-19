@@ -1,0 +1,122 @@
+[
+    {
+        "number": 1,
+        "profileImage": "https://randomuser.me/api/portraits/women/1.jpg",
+        "name": "Emma Smith",
+        "points": 1540
+    },
+    {
+        "number": 2,
+        "profileImage": "https://randomuser.me/api/portraits/men/2.jpg",
+        "name": "John Doe",
+        "points": 1460
+    },
+    {
+        "number": 3,
+        "profileImage": "https://randomuser.me/api/portraits/women/3.jpg",
+        "name": "Olivia Johnson",
+        "points": 1385
+    },
+    {
+        "number": 4,
+        "profileImage": "https://randomuser.me/api/portraits/men/4.jpg",
+        "name": "Noah Williams",
+        "points": 1320
+    },
+    {
+        "number": 5,
+        "profileImage": "https://randomuser.me/api/portraits/women/5.jpg",
+        "name": "Ava Brown",
+        "points": 1295
+    },
+    {
+        "number": 6,
+        "profileImage": "https://randomuser.me/api/portraits/men/6.jpg",
+        "name": "Liam Jones",
+        "points": 1270
+    },
+    {
+        "number": 7,
+        "profileImage": "https://randomuser.me/api/portraits/women/7.jpg",
+        "name": "Sophia Miller",
+        "points": 1250
+    },
+    {
+        "number": 8,
+        "profileImage": "https://randomuser.me/api/portraits/men/8.jpg",
+        "name": "Mason Davis",
+        "points": 1230
+    },
+    {
+        "number": 9,
+        "profileImage": "https://randomuser.me/api/portraits/women/9.jpg",
+        "name": "Isabella Garcia",
+        "points": 1205
+    },
+    {
+        "number": 10,
+        "profileImage": "https://randomuser.me/api/portraits/men/10.jpg",
+        "name": "Lucas Rodriguez",
+        "points": 1190
+    },
+    {
+        "number": 11,
+        "profileImage": "https://randomuser.me/api/portraits/women/11.jpg",
+        "name": "Mia Martinez",
+        "points": 1175
+    },
+    {
+        "number": 12,
+        "profileImage": "https://randomuser.me/api/portraits/men/12.jpg",
+        "name": "Ethan Hernandez",
+        "points": 1160
+    },
+    {
+        "number": 13,
+        "profileImage": "https://randomuser.me/api/portraits/women/13.jpg",
+        "name": "Charlotte Gonzalez",
+        "points": 1145
+    },
+    {
+        "number": 14,
+        "profileImage": "https://randomuser.me/api/portraits/men/14.jpg",
+        "name": "Alexander Wilson",
+        "points": 1130
+    },
+    {
+        "number": 15,
+        "profileImage": "https://randomuser.me/api/portraits/women/15.jpg",
+        "name": "Amelia Martinez",
+        "points": 1120
+    },
+    {
+        "number": 16,
+        "profileImage": "https://randomuser.me/api/portraits/men/16.jpg",
+        "name": "James Thomas",
+        "points": 1105
+    },
+    {
+        "number": 17,
+        "profileImage": "https://randomuser.me/api/portraits/women/17.jpg",
+        "name": "Harper Jackson",
+        "points": 1090
+    },
+    {
+        "number": 18,
+        "profileImage": "https://randomuser.me/api/portraits/men/18.jpg",
+        "name": "Benjamin White",
+        "points": 1075
+    },
+    {
+        "number": 19,
+        "profileImage": "https://randomuser.me/api/portraits/women/19.jpg",
+        "name": "Elizabeth Harris",
+        "points": 1060
+    },
+    {
+        "number": 20,
+        "profileImage": "https://randomuser.me/api/portraits/men/20.jpg",
+        "name": "Jack Clark",
+        "points": 1045
+    }
+]
