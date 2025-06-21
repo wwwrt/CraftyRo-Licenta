@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-x-0 top-14 sm:top-24 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-6rem)] w-full overflow-hidden">
+  <div class="fixed inset-x-0 top-14 sm:top-24 h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-6rem)] w-full overflow-hidden">
     <div class="flex flex-col items-center sm:flex-row sm:items-stretch gap-4 w-full h-full max-w-6xl mx-auto p-2 sm:p-4">
       <!-- Lista de chaturi -->
       <div
