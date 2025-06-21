@@ -37,15 +37,20 @@ function updateBtnPosition(entryOrNull = null) {
   const btn = addBtn.value
   const footer = document.querySelector('footer')
   if (!btn || !footer) return
+
+  const isMobile = window.innerWidth <= 640;
+  const defaultBottom = isMobile ? 16 : 32;
+  const overlapMargin = isMobile ? 16 : 24;
+
   const windowHeight = window.innerHeight
   const footerRect = footer.getBoundingClientRect()
   const overlap = Math.max(0, windowHeight - footerRect.top)
   if ((entryOrNull && entryOrNull.isIntersecting) || overlap > 0) {
     isOverFooter.value = true
-    btnBottom.value = overlap + 24
+    btnBottom.value = overlap + overlapMargin
   } else {
     isOverFooter.value = false
-    btnBottom.value = 32
+    btnBottom.value = defaultBottom
   }
 }
 
@@ -80,8 +85,7 @@ const btnStyle = computed(() => ({
   transition: bottom 0.3s cubic-bezier(.4,0,.2,1);
 }
 @media (max-width: 640px) {
-  .sticky-footer {
-    bottom: 16px !important;
+  button {
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: 90vw !important;

@@ -341,11 +341,28 @@ nav, .active-tab, .navbar-hover, .profile-toggle, .fade-enter-active, .fade-leav
     height: 56px !important;
     min-height: 56px !important;
     padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
   }
   .flex-shrink-0 img {
-    height: 40px !important;
+    height: 88px !important; /* Mărit logo-ul */
     width: auto !important;
-    margin-left: 0.5rem !important;
+    margin-left: 0 !important;
+  }
+  /* Redimensionare butoane acțiuni */
+  .flex.items-center.space-x-2 > button,
+  .flex.items-center.space-x-2 > a.relative {
+    width: 32px !important; /* de la 40px */
+    height: 32px !important; /* de la 40px */
+    padding: 4px !important;
+  }
+  .flex.items-center.space-x-2 > .relative > .profile-toggle,
+  .flex.items-center.space-x-2 > .relative > .profile-toggle > img {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .flex.items-center.space-x-2 svg {
+    width: 20px !important; /* de la 24px */
+    height: 20px !important; /* de la 24px */
   }
 }
 </style>
