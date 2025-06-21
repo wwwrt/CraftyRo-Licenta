@@ -36,18 +36,27 @@
           style="width: 100%; height: 100%;"
         />
         <!-- Colț stânga sus: Locul în clasament -->
-        <div class="absolute top-2 left-2 bg-white/80 rounded-full px-3 py-1 shadow text-[#b5838d] font-bold text-lg z-10">
+        <div :class="[
+          'absolute top-2 left-2 bg-white/80 rounded-full px-2 py-0.5 sm:px-3 sm:py-1 shadow text-[#b5838d] font-bold text-sm sm:text-lg z-10 transition-opacity duration-500 ease-in-out',
+          idx === 1 ? 'opacity-100' : 'opacity-0'
+        ]">
           #{{ slide.position }}
         </div>
         <!-- Colț dreapta sus: Inimioară cu like-uri -->
-        <div class="absolute top-2 right-2 flex items-center bg-white/80 rounded-full px-3 py-1 shadow text-[#b5838d] font-bold text-lg z-10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-1" fill="#f55f09" viewBox="0 0 24 24">
+        <div :class="[
+          'absolute top-2 right-2 flex items-center bg-white/80 rounded-full px-2 py-0.5 sm:px-3 sm:py-1 shadow text-[#b5838d] font-bold text-sm sm:text-lg z-10 transition-opacity duration-500 ease-in-out',
+          idx === 1 ? 'opacity-100' : 'opacity-0'
+        ]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-6 sm:w-6 mr-1" fill="#f55f09" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
           </svg>
           {{ slide.likedBy ? slide.likedBy.length : 0 }}
         </div>
         <!-- Jos, centrat: Titlul -->
-        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 rounded-xl px-4 py-2 shadow text-[#7f5539] font-bold text-xl text-center w-[90%] truncate">
+        <div :class="[
+          'absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 rounded-xl px-2 py-1 sm:px-4 sm:py-2 shadow text-[#7f5539] font-bold text-base sm:text-xl text-center w-[90%] truncate transition-opacity duration-500 ease-in-out',
+          idx === 1 ? 'opacity-100' : 'opacity-0'
+        ]">
           {{ slide.name }}
         </div>
       </router-link>
@@ -77,7 +86,8 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      intervalId: null
+      intervalId: null,
+      isMobile: false
     }
   },
   computed: {
@@ -113,10 +123,16 @@ export default {
   },
   methods: {
     nextSlide() {
-      this.currentIndex = (this.currentIndex + 1) % this.products.length
+      const len = this.topProducts.length
+      if (len > 0) {
+        this.currentIndex = (this.currentIndex + 1) % len
+      }
     },
     prevSlide() {
-      this.currentIndex = (this.currentIndex - 1 + this.products.length) % this.products.length
+      const len = this.topProducts.length
+      if (len > 0) {
+        this.currentIndex = (this.currentIndex - 1 + len) % len
+      }
     },
     startAutoplay() {
       if (this.intervalId) return
@@ -129,7 +145,7 @@ export default {
       this.intervalId = null
     },
     getSlideStyle(idx) {
-      const isMobile = window.innerWidth < 640
+      const isMobile = this.isMobile
       // Define base styles for each slide position: 0 (left), 1 (center), 2 (right)
       const base = [
         {
@@ -160,9 +176,14 @@ export default {
         height: idx === 1 ? (isMobile ? '11rem' : '24rem') : (isMobile ? '5.5rem' : '12rem'),
         transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)'
       }
+    },
+    handleResize() {
+      this.isMobile = window.innerWidth < 640
     }
   },
   mounted() {
+    this.handleResize()
+    window.addEventListener('resize', this.handleResize)
     this.startAutoplay()
     // DEBUG: vezi dacă ai duplicate sau lipsă
     const ids = this.products.map(p => p.id)
@@ -181,6 +202,7 @@ export default {
   },
   beforeUnmount() {
     this.stopAutoplay()
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>

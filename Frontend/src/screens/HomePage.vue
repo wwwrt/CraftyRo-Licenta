@@ -164,7 +164,7 @@ const sellItGif = computed(() => isDark.value ? '/SellItDM.gif' : '/SellIt.gif')
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen mt-16">
+  <div class="flex flex-col min-h-screen mt-8">
     <div class="content">
       <!-- GIF-uri + tagline suprapus -->
       <div
@@ -183,7 +183,7 @@ const sellItGif = computed(() => isDark.value ? '/SellItDM.gif' : '/SellIt.gif')
       </div>
       <!-- Titlu -->
       <div
-        class="flex mt-4 sm:mt-6 md:mt-16 lg:mt-32 xl:mt-32 mb-8 text-[2rem] md:text-[3rem] lg:text-[4rem] justify-center text-center"
+        class="flex mt-12 sm:mt-6 md:mt-16 lg:mt-32 xl:mt-32 mb-4 text-[2rem] md:text-[3rem] lg:text-[4rem] justify-center text-center"
         :class="isDark ? 'text-white' : 'text-[#583826]'">
         Cele mai apreciate creații ale lunii {{ currentMonth }}
       </div>

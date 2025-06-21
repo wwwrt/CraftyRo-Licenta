@@ -1,8 +1,11 @@
 <template>
-  <div class="fixed inset-x-0 top-24 h-[calc(100vh-6rem)] w-full overflow-hidden ">
-    <div class="flex flex-col sm:flex-row gap-4 w-full h-full max-w-6xl mx-auto p-2 sm:p-4">
+  <div class="fixed inset-x-0 top-14 sm:top-24 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-6rem)] w-full overflow-hidden">
+    <div class="flex flex-col items-center sm:flex-row sm:items-stretch gap-4 w-full h-full max-w-6xl mx-auto p-2 sm:p-4">
       <!-- Lista de chaturi -->
-      <div class="flex flex-col w-full sm:w-[320px] min-w-[180px] max-w-[340px] h-full min-h-0 bg-white rounded-2xl shadow-xl overflow-hidden p-0">
+      <div
+        v-show="!isMobile || !selectedConversation"
+        class="flex flex-col w-full sm:w-[320px] min-w-[180px] max-w-[340px] h-full min-h-0 bg-white rounded-2xl shadow-xl overflow-hidden p-0"
+      >
         <div class="flex-1 min-h-0 overflow-y-auto hide-scrollbar p-2 sm:p-3">
           <div
             v-for="conv in conversations"
@@ -56,21 +59,41 @@
       </div>
 
       <!-- Card conversație -->
-      <div class="flex flex-col flex-1 min-w-0 h-full min-h-0">
+      <div
+        v-show="!isMobile || selectedConversation"
+        class="flex flex-col w-full max-w-[340px] sm:w-auto sm:max-w-none flex-1 min-w-0 h-full min-h-0"
+      >
         <div v-if="selectedConversation" class="flex flex-col h-full min-h-0 gap-y-4">
           <!-- Header ca un card -->
-          <div v-if="otherUser" class="flex items-center gap-3 px-4 py-4 bg-white rounded-2xl shadow-md flex-shrink-0">
-            <img
-              :src="otherUser.photoURL || '/default-avatar.png'"
-              class="w-12 h-12 rounded-full object-cover border border-[#faedcd]"
-              alt="avatar"
-            />
-            <div>
-              <div class="font-semibold text-[#7f5539] text-lg cursor-pointer hover:underline"
-                @click="goToUserProfile(otherUserId)">
-                {{ otherUser.displayName || otherUser.name || 'Utilizator' }}
+          <div class="flex items-center gap-3 px-4 py-4 bg-white rounded-2xl shadow-md flex-shrink-0">
+            <button v-if="isMobile" @click="selectedConversation = null" class="mr-2 p-1 text-[#583826] hover:bg-gray-100 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <!-- Skeleton Loader (FIX PENTRU GLITCH) -->
+            <template v-if="!otherUser">
+              <div class="w-12 h-12 rounded-full bg-gray-200 animate-pulse"></div>
+              <div class="flex-1">
+                <div class="h-5 bg-gray-200 rounded-md w-32 animate-pulse"></div>
               </div>
-            </div>
+            </template>
+
+            <!-- Conținutul real al header-ului -->
+            <template v-else>
+              <img
+                :src="otherUser.photoURL || '/default-avatar.png'"
+                class="w-12 h-12 rounded-full object-cover border border-[#faedcd]"
+                alt="avatar"
+              />
+              <div>
+                <div class="font-semibold text-[#7f5539] text-lg cursor-pointer hover:underline"
+                  @click="goToUserProfile(otherUserId)">
+                  {{ otherUser.displayName || otherUser.name || 'Utilizator' }}
+                </div>
+              </div>
+            </template>
           </div>
           <!-- Mesaje ca un card -->
           <div
@@ -134,7 +157,7 @@
             </button>
           </form>
         </div>
-        <div v-else class="flex flex-1 items-center justify-center text-gray-400">
+        <div v-else-if="!isMobile" class="flex flex-1 items-center justify-center text-gray-400">
           Selectează o conversație
         </div>
       </div>
@@ -144,7 +167,7 @@
 
 <script setup>
 import { ref, computed, nextTick, onMounted, watch, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useMessagesStore } from '@/stores/messagesStore'
 import { collection, addDoc, serverTimestamp, doc, updateDoc, query, orderBy, onSnapshot, getDoc, writeBatch, getDocs, where, deleteDoc } from 'firebase/firestore'
 import { db } from '@/firebaseconfig'
@@ -161,9 +184,9 @@ const chatRef = ref(null)
 const otherUser = ref(null)
 const content = ref('')
 const sending = ref(false)
+const isMobile = ref(window.innerWidth < 640)
 
 const route = useRoute()
-const router = useRouter()
 
 const conversations = computed(() => messagesStore.conversations)
 const otherUserId = computed(() => {
@@ -171,8 +194,11 @@ const otherUserId = computed(() => {
   return selectedConversation.value.members.find(uid => uid !== currentUser.value.uid)
 })
 
+const onResize = () => { isMobile.value = window.innerWidth < 640 }
+
 // 1. Inițializează userul la mount
 onMounted(() => {
+  window.addEventListener('resize', onResize)
   const auth = getAuth()
   onAuthStateChanged(auth, (user) => {
     currentUser.value = user
@@ -205,10 +231,19 @@ watch(
 let convoUnsub = null
 
 async function handleSelectConversation(convOrId) {
-  // Caută conversația actualizată din store după id
   const convId = typeof convOrId === 'string' ? convOrId : convOrId.id
+  // Nu face nimic dacă aceeași conversație este deja selectată
+  if (selectedConversation.value?.id === convId) return
+
+  // Caută conversația actualizată din store după id
   const conv = conversations.value.find(c => c.id === convId)
   if (!conv) return
+
+  // Resetare stare pentru a preveni afișarea datelor vechi (FIX)
+  messages.value = []
+  otherUser.value = null
+  loading.value = true
+
   selectedConversation.value = conv
   if (!openedConversations.value.includes(conv.id)) {
     openedConversations.value.push(conv.id)
@@ -413,11 +448,8 @@ onUnmounted(async () => {
   ) {
     await deleteDoc(doc(db, 'conversations', selectedConversation.value.id))
   }
+  window.removeEventListener('resize', onResize)
 })
-
-function goToUserProfile(id) {
-  router.push({ name: 'user-profile', params: { id } })
-}
 </script>
 
 <style scoped>

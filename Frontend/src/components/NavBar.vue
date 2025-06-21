@@ -10,7 +10,7 @@
     ]"
   >
     <!-- Stânga: Logo -->
-    <div class="flex-shrink-0 h-full flex items-center overflow-visible ml-6">
+    <div class="flex-shrink-0 h-full flex items-center overflow-visible sm:ml-6">
       <img
         :src="ui.darkMode ? '/images/LogoDM2.png' : '/images/LogoWM2.png'"
         class="h-44 w-auto object-contain m-0 p-0"
@@ -346,7 +346,6 @@ nav, .active-tab, .navbar-hover, .profile-toggle, .fade-enter-active, .fade-leav
   .flex-shrink-0 img {
     height: 88px !important; /* Mărit logo-ul */
     width: auto !important;
-    margin-left: 0 !important;
   }
   /* Redimensionare butoane acțiuni */
   .flex.items-center.space-x-2 > button,

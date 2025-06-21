@@ -7,7 +7,7 @@
       <div class="absolute top-0 left-0 w-32 h-32 bg-[#d4a373]/30 rounded-full blur-2xl"></div>
       <div class="absolute bottom-0 right-0 w-40 h-40 bg-[#7f5539]/20 rounded-full blur-2xl"></div>
     </div>
-    <main class="flex-1 pt-24 mx-auto w-full">
+    <main class="flex-1 pt-14 sm:pt-24 mx-auto w-full">
       <router-view v-slot="{ Component }">
         <Transition name="page" mode="out-in">
           <component :is="Component" />
