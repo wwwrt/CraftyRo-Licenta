@@ -335,6 +335,19 @@ nav.dark.backdrop-blur-lg {
 nav, .active-tab, .navbar-hover, .profile-toggle, .fade-enter-active, .fade-leave-active {
   transition: background-color 0.8s cubic-bezier(.4,0,.2,1), color 0.8s cubic-bezier(.4,0,.2,1), box-shadow 0.4s cubic-bezier(.4,0,.2,1);
 }
+
+@media (max-width: 640px) {
+  nav {
+    height: 56px !important;
+    min-height: 56px !important;
+    padding-right: 0.5rem !important;
+  }
+  .flex-shrink-0 img {
+    height: 40px !important;
+    width: auto !important;
+    margin-left: 0.5rem !important;
+  }
+}
 </style>
 
 <link rel="preload" as="image" href="/images/LogoWM2.png">

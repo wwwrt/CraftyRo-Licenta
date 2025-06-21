@@ -79,6 +79,17 @@ const btnStyle = computed(() => ({
   /* poți adăuga efect de ridicare dacă vrei */
   transition: bottom 0.3s cubic-bezier(.4,0,.2,1);
 }
+@media (max-width: 640px) {
+  .sticky-footer {
+    bottom: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90vw !important;
+    max-width: 340px !important;
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+}
 </style>
 
 

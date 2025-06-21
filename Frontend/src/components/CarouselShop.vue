@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex items-center justify-center w-full py-4"
+    class="carousel-root relative flex items-center justify-center w-full py-4"
     style="height: 26rem;"
     @mouseenter="stopAutoplay"
     @mouseleave="startAutoplay"
@@ -129,33 +129,35 @@ export default {
       this.intervalId = null
     },
     getSlideStyle(idx) {
-      // idx: 0 = left, 1 = center, 2 = right
-      const base = {
-        0: {
-          transform: 'translate(-180%, -50%) scale(0.75)',
+      const isMobile = window.innerWidth < 640
+      // Define base styles for each slide position: 0 (left), 1 (center), 2 (right)
+      const base = [
+        {
+          left: isMobile ? '10%' : '25%',
           zIndex: 10,
           opacity: 0.6,
+          transform: 'translate(-50%, -50%) scale(0.85)',
           filter: 'blur(1px)'
         },
-        1: {
-          transform: 'translate(-50%, -50%) scale(1)',
+        {
+          left: '50%',
           zIndex: 20,
           opacity: 1,
+          transform: 'translate(-50%, -50%) scale(1)',
           filter: 'none'
         },
-        2: {
-          transform: 'translate(80%, -50%) scale(0.75)',
+        {
+          left: isMobile ? '90%' : '75%',
           zIndex: 10,
-          // Adaugă blur și fade-in la slide-ul din dreapta când apare
-          filter: 'blur(4px)',
-          opacity: 0,
-          animation: 'fadeInBlur 0.5s forwards'
+          opacity: 0.6,
+          transform: 'translate(-50%, -50%) scale(0.85)',
+          filter: 'blur(1px)'
         }
-      }
+      ]
       return {
         ...base[idx],
-        width: idx === 1 ? '24rem' : '12rem',
-        height: idx === 1 ? '24rem' : '12rem',
+        width: idx === 1 ? (isMobile ? '11rem' : '24rem') : (isMobile ? '5.5rem' : '12rem'),
+        height: idx === 1 ? (isMobile ? '11rem' : '24rem') : (isMobile ? '5.5rem' : '12rem'),
         transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)'
       }
     }
@@ -192,6 +194,13 @@ export default {
   to {
     opacity: 0.6;
     filter: blur(1px);
+  }
+}
+
+@media (max-width: 640px) {
+  .carousel-root {
+    height: 13rem !important;
+    min-height: 0 !important;
   }
 }
 </style>
