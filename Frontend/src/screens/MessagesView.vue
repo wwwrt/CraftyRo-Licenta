@@ -6,13 +6,11 @@
         v-show="!isMobile || !selectedConversation"
         :class="[
           'flex flex-col h-full min-h-0 bg-white rounded-2xl shadow-xl overflow-hidden p-0 transition-all duration-500 ease-in-out',
-          // Lățimi standard pentru mobil și desktop
-          'w-full sm:w-[320px] max-w-[340px]',
-          // Suprascriere specifică pentru tabletă
+          'w-full', // Implicit pentru mobil (<768px)
+          // Suprascrieri pentru ecrane mai mari ('md' și peste)
           {
-            'md:w-full md:max-w-full': isTablet && !selectedConversation, // Tabletă, fără selecție: lățime completă
-            'md:w-[280px] md:max-w-[280px]': isTablet && selectedConversation && !isListTemporarilyExpanded, // Tabletă, selectat, normal
-            'md:w-[400px] md:max-w-[400px]': isTablet && selectedConversation && isListTemporarilyExpanded, // Tabletă, selectat, expandat temporar
+            'md:w-[340px] md:max-w-[340px]': !isListTemporarilyExpanded,
+            'md:w-[420px] md:max-w-[420px]': isListTemporarilyExpanded,
           }
         ]"
       >
@@ -83,7 +81,7 @@
 
       <!-- Card conversație (cu v-show și @click actualizate) -->
       <div
-        v-show="(!isMobile && !isTablet) || selectedConversation"
+        v-show="!isMobile || selectedConversation"
         @click="revertListExpansion"
         class="flex flex-col w-full max-w-[340px] sm:w-auto sm:max-w-none flex-1 min-w-0 h-full min-h-0"
       >
@@ -232,8 +230,7 @@ const chatRef = ref(null)
 const listContainerRef = ref(null)
 const isScrolledFromTop = ref(false)
 const isScrolledToEnd = ref(true)
-const isMobile = ref(window.innerWidth < 640)
-const isTablet = ref(window.innerWidth >= 640 && window.innerWidth < 1024)
+const isMobile = ref(window.innerWidth < 768) // Punct de rupere unic la 768px (md)
 const isListTemporarilyExpanded = ref(false)
 const listExpansionTimeout = ref(null)
 
@@ -448,8 +445,7 @@ function messageStatus(msg) {
 
 const onResize = () => {
   const width = window.innerWidth
-  isMobile.value = width < 640
-  isTablet.value = width >= 640 && width < 1024
+  isMobile.value = width < 768
 }
 
 function updateScrollState() {
@@ -461,7 +457,7 @@ function updateScrollState() {
 }
 
 function handleListScroll() {
-  if (isTablet.value && selectedConversation.value) {
+  if (!isMobile.value && selectedConversation.value) {
     if (listExpansionTimeout.value) clearTimeout(listExpansionTimeout.value)
     isListTemporarilyExpanded.value = true
     listExpansionTimeout.value = setTimeout(() => {
