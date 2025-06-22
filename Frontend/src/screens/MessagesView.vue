@@ -1,17 +1,13 @@
 <template>
   <div class="fixed inset-x-0 top-14 sm:top-24 h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-6rem)] w-full overflow-hidden">
     <div class="flex flex-col items-center sm:flex-row sm:items-stretch gap-4 w-full h-full max-w-6xl mx-auto p-2 sm:p-4">
-      <!-- Lista de chaturi (cu clase dinamice pentru tabletă) -->
+      <!-- Lista de chaturi (cu stil dinamic) -->
       <div
         v-show="!isMobile || !selectedConversation"
+        :style="listStyle"
         :class="[
-          'flex flex-col h-full min-h-0 bg-white rounded-2xl shadow-xl overflow-hidden p-0 transition-all duration-500 ease-in-out',
-          'w-full', // Implicit pentru mobil (<768px)
-          // Suprascrieri pentru ecrane mai mari ('md' și peste)
-          {
-            'md:w-[340px] md:max-w-[340px]': !isListTemporarilyExpanded,
-            'md:w-[420px] md:max-w-[420px]': isListTemporarilyExpanded,
-          }
+          'flex-shrink-0 flex flex-col h-full min-h-0 bg-white rounded-2xl shadow-xl overflow-hidden p-0 transition-all duration-500 ease-in-out',
+          isMobile || !selectedConversation ? 'w-full' : ''
         ]"
       >
         <!-- NOU: Wrapper pentru efectul de fade -->
@@ -39,15 +35,15 @@
                 alt="avatar"
               />
               <div class="flex-1 min-w-0">
-                <div :class="selectedConversation?.id === conv.id ? 'font-semibold text-white' : 'font-semibold text-[#583826]'" class="text-base truncate">
+                <div :class="selectedConversation?.id === conv.id ? 'font-semibold text-white' : 'font-semibold text-[#583826]'" class="text-base text-fade">
                   {{ conv.name || 'Conversatie' }}
                 </div>
                 <!-- ACTUALIZAT: Titlul produsului, afișat mereu dacă există -->
-                <div v-if="conv.productTitle" :class="selectedConversation?.id === conv.id ? 'text-xs text-white/80' : 'text-xs text-[#b5838d]'" class="truncate">
+                <div v-if="conv.productTitle" :class="selectedConversation?.id === conv.id ? 'text-xs text-white/80' : 'text-xs text-[#b5838d]'" class="text-fade">
                   {{ conv.productTitle }}
                 </div>
                 <div
-                  class="text-sm truncate max-w-[180px]"
+                  class="text-sm text-fade max-w-[180px]"
                   :class="[
                     conv.lastMessageRead === false && conv.lastMessageSenderId !== currentUser?.uid
                       ? 'font-bold'
@@ -116,17 +112,20 @@
                     @click="goToUserProfile(otherUserId)">
                     {{ otherUser.displayName || otherUser.name || 'Utilizator' }}
                   </div>
-                  <!-- NOU: Titlul produsului în header-ul conversației -->
-                  <div v-if="selectedConversation.productTitle" class="text-sm text-[#b5838d] truncate">
+                  <!-- ACTUALIZAT: Titlul produsului devine un link -->
+                  <div v-if="selectedConversation.productTitle" 
+                       class="text-sm text-[#b5838d] truncate cursor-pointer hover:underline"
+                       @click="goToProductPage(selectedConversation.productId)">
                     {{ selectedConversation.productTitle }}
                   </div>
                 </div>
-                <!-- NOU: Imaginea produsului în header -->
+                <!-- ACTUALIZAT: Imaginea produsului devine un link -->
                 <img
                   v-if="selectedConversation.productImage"
                   :src="selectedConversation.productImage"
-                  class="w-12 h-12 rounded-xl object-cover ml-4 flex-shrink-0"
+                  class="w-12 h-12 rounded-xl object-cover ml-4 flex-shrink-0 cursor-pointer"
                   alt="produs"
+                  @click="goToProductPage(selectedConversation.productId)"
                 />
               </template>
             </div>
@@ -137,32 +136,39 @@
             >
               <div v-if="loading" class="text-center text-gray-400">Se încarcă...</div>
               <div v-if="!loading && messages.length === 0" class="text-center text-gray-400">Niciun mesaj.</div>
-              <div
-                v-for="msg in messages"
-                :key="msg.id"
-                :class="[
-                  'flex w-full mb-2',
-                  msg.senderId === currentUser?.uid ? 'justify-end' : 'justify-start'
-                ]"
-              >
-                <div v-if="msg.senderId === currentUser?.uid" class="flex flex-col items-end">
-                  <div class="px-5 py-3 rounded-2xl rounded-br-md shadow-md bg-[#583826] text-white max-w-[70vw] min-w-[48px] break-words">
-                    <span>{{ msg.content }}</span>
+              <!-- ACTUALIZAT: Iterăm prin lista cu separatoare de dată -->
+              <template v-for="item in messagesWithDates" :key="item.id">
+                <!-- Afișăm separatorul de dată -->
+                <div v-if="item.type === 'date'" class="text-center text-xs text-gray-400 my-4">
+                  <span>{{ formatDateSeparator(item.date) }}</span>
+                </div>
+                <!-- Afișăm mesajul -->
+                <div
+                  v-else
+                  :class="[
+                    'flex w-full mb-2',
+                    item.senderId === currentUser?.uid ? 'justify-end' : 'justify-start'
+                  ]"
+                >
+                  <div v-if="item.senderId === currentUser?.uid" class="flex flex-col items-end">
+                    <div class="px-5 py-3 rounded-2xl rounded-br-md shadow-md bg-[#583826] text-white max-w-[70vw] min-w-[48px] break-words">
+                      <span>{{ item.content }}</span>
+                    </div>
+                    <div class="text-xs mt-1" style="color: #b0a89f; font-style: italic; text-align: right;">
+                      {{ formatTime(item.timestamp) }}
+                      <span>· {{ messageStatus(item) }}</span>
+                    </div>
                   </div>
-                  <div class="text-xs mt-1" style="color: #b0a89f; font-style: italic; text-align: right;">
-                    {{ formatTime(msg.timestamp) }}
-                    <span>· {{ messageStatus(msg) }}</span>
+                  <div v-else class="flex flex-col items-start">
+                    <div class="px-5 py-3 rounded-2xl rounded-bl-md shadow-md bg-[#fef3ec] text-[#583826] max-w-[70vw] min-w-[48px] break-words">
+                      <span>{{ item.content }}</span>
+                    </div>
+                    <div class="text-xs mt-1" style="color: #b0a89f; font-style: italic; text-align: left;">
+                      {{ formatTime(item.timestamp) }}
+                    </div>
                   </div>
                 </div>
-                <div v-else class="flex flex-col items-start">
-                  <div class="px-5 py-3 rounded-2xl rounded-bl-md shadow-md bg-[#fef3ec] text-[#583826] max-w-[70vw] min-w-[48px] break-words">
-                    <span>{{ msg.content }}</span>
-                  </div>
-                  <div class="text-xs mt-1" style="color: #b0a89f; font-style: italic; text-align: left;">
-                    {{ formatTime(msg.timestamp) }}
-                  </div>
-                </div>
-              </div>
+              </template>
             </div>
             <!-- Bara de typing (cu @click actualizat) -->
             <form
@@ -193,9 +199,7 @@
               </button>
             </form>
           </div>
-          <div v-else-if="!isMobile" class="flex flex-1 items-center justify-center text-gray-400" key="empty-state">
-            Selectează o conversație
-          </div>
+          <!-- ELIMINAT: Mesajul "Selectează o conversație" a fost scos -->
         </Transition>
       </div>
     </div>
@@ -230,9 +234,35 @@ const chatRef = ref(null)
 const listContainerRef = ref(null)
 const isScrolledFromTop = ref(false)
 const isScrolledToEnd = ref(true)
-const isMobile = ref(window.innerWidth < 768) // Punct de rupere unic la 768px (md)
+// ACTUALIZAT: Breakpoint-uri aliniate cu Tailwind CSS
+const isMobile = ref(window.innerWidth < 640) // Mobil: sub 640px (sm)
+const isTablet = ref(window.innerWidth >= 640 && window.innerWidth < 1280) // Tabletă: între 640px (sm) și 1280px (xl)
 const isListTemporarilyExpanded = ref(false)
 const listExpansionTimeout = ref(null)
+
+// NOU: Proprietate computed pentru a gestiona lățimea listei
+const listStyle = computed(() => {
+  if (isMobile.value || !selectedConversation.value) return {}
+  if (!isTablet.value) return { width: '420px' } // Desktop: lățime fixă
+  if (isListTemporarilyExpanded.value) return { width: '420px' } // Tabletă la scroll: lățime fixă
+  // ACTUALIZAT: Formulă pentru a începe redimensionarea de la 640px
+  return { width: 'clamp(240px, calc(28.125vw + 60px), 420px)' }
+})
+
+// NOU: Proprietate computed care adaugă separatoare de dată între mesaje
+const messagesWithDates = computed(() => {
+  const result = []
+  let lastDate = null
+  messages.value.forEach(msg => {
+    const msgDate = msg.timestamp?.toDate().toDateString()
+    if (msgDate && msgDate !== lastDate) {
+      result.push({ type: 'date', id: msgDate, date: msg.timestamp.toDate() })
+      lastDate = msgDate
+    }
+    result.push({ type: 'message', ...msg })
+  })
+  return result
+})
 
 // --- Proprietăți calculate ---
 const rawConversations = computed(() => messagesStore.conversations)
@@ -426,6 +456,22 @@ async function fetchOtherUser() {
 }
 
 // --- Funcții de formatare și UI ---
+
+// NOU: Funcție pentru a formata data pentru separatoare
+function formatDateSeparator(date) {
+  const today = new Date()
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  if (date.toDateString() === today.toDateString()) {
+    return 'Astăzi'
+  }
+  if (date.toDateString() === yesterday.toDateString()) {
+    return 'Ieri'
+  }
+  return date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
 function getLastMessage(conv) {
   if (!conv.lastMessage) return ''
   return conv.lastMessageSenderId === currentUser.value?.uid
@@ -445,7 +491,9 @@ function messageStatus(msg) {
 
 const onResize = () => {
   const width = window.innerWidth
-  isMobile.value = width < 768
+  // ACTUALIZAT: Aliniem funcția de resize la noile breakpoint-uri
+  isMobile.value = width < 640
+  isTablet.value = width >= 640 && width < 1280
 }
 
 function updateScrollState() {
@@ -456,26 +504,35 @@ function updateScrollState() {
   isScrolledToEnd.value = (scrollTop + clientHeight) >= (scrollHeight - threshold)
 }
 
+// ACTUALIZAT: Funcția gestionează lățirea listei DOAR pe tabletă
 function handleListScroll() {
-  if (!isMobile.value && selectedConversation.value) {
+  if (isTablet.value && selectedConversation.value) {
     if (listExpansionTimeout.value) clearTimeout(listExpansionTimeout.value)
     isListTemporarilyExpanded.value = true
     listExpansionTimeout.value = setTimeout(() => {
       isListTemporarilyExpanded.value = false
-    }, 5000)
+    }, 5000) // Revine la normal după 5 secunde
   }
   updateScrollState()
 }
 
+// NOU: Funcție pentru a reveni la starea normală la click
 function revertListExpansion() {
   if (isListTemporarilyExpanded.value) {
-    if (listExpansionTimeout.value) clearTimeout(listExpansionTimeout.value)
     isListTemporarilyExpanded.value = false
+    if (listExpansionTimeout.value) clearTimeout(listExpansionTimeout.value)
   }
 }
 
 function goToUserProfile(userId) {
   if (userId) router.push({ name: 'user-profile', params: { id: userId } })
+}
+
+// NOU: Funcție pentru a naviga la pagina produsului
+function goToProductPage(productId) {
+  if (productId) {
+    router.push({ name: 'product-detail', params: { id: productId } })
+  }
 }
 
 // --- Cicluri de viață ---
@@ -493,27 +550,8 @@ onUnmounted(() => {
   if (convoUnsub) convoUnsub()
   window.removeEventListener('resize', onResize)
 })
-
 </script>
 
 <style scoped>
-.hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.hide-scrollbar::-webkit-scrollbar {
-  display: none !important;
-}
-
-/* ACTUALIZAT: Stiluri pentru o tranziție și mai fluidă */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: scale(0.97);
-}
+/* NU MAI SUNT NEVOIE DE STILURI SUPLIMENTARE, TOATE SUNT GESTIONATE PRIN TAILWIND CSS */
 </style>
