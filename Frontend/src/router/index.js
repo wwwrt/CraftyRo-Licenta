@@ -149,6 +149,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+  // eslint-disable-next-line no-unused-vars
+  // scrollBehavior(_to, _from, _savedPosition) {
+  //   // Forțează fereastra să revină la coordonatele (0,0) la fiecare navigare.
+  //   // Aceasta este soluția standard pentru problema de redare la tranziția
+  //   // de la o pagină `fixed` (MessagesView) la o pagină cu flux normal.
+  //   return { top: 0, left: 0 }
+  // }
 })
 
 export default router

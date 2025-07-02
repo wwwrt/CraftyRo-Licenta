@@ -7,17 +7,28 @@
     @touchstart="stopAutoplay"
     @touchend="startAutoplay"
   >
-    <!-- Săgeată stânga -->
-    <button
-      type="button"
-      class="absolute left-2 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center h-10 w-10 rounded-full bg-white/30 hover:bg-[#b5838d]/60 transition group focus:outline-none"
-      @click="prevSlide"
-      aria-label="Previous"
-    >
-      <svg class="w-4 h-4 text-[#b5838d]" fill="none" viewBox="0 0 6 10">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-      </svg>
-    </button>
+    <!-- Afișaj pentru când nu sunt produse -->
+    <div v-if="visibleSlides.length === 0" class="flex items-center justify-center h-full">
+      <div class="text-center">
+        <div class="text-lg text-gray-500 mb-2">Nu sunt produse disponibile</div>
+        <div class="text-sm text-gray-400">Produse primite: {{ products.length }}</div>
+        <div class="text-sm text-gray-400">Top products: {{ topProducts.length }}</div>
+      </div>
+    </div>
+    
+    <!-- Carousel normal când sunt produse -->
+    <template v-else>
+      <!-- Săgeată stânga -->
+      <button
+        type="button"
+        class="absolute left-2 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center h-10 w-10 rounded-full bg-white/30 hover:bg-[#b5838d]/60 transition group focus:outline-none"
+        @click="prevSlide"
+        aria-label="Previous"
+      >
+        <svg class="w-4 h-4 text-[#b5838d]" fill="none" viewBox="0 0 6 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+        </svg>
+      </button>
     <!-- Imagini carousel -->
     <template v-for="(slide, idx) in visibleSlides" :key="slide.id">
       <router-link
@@ -29,11 +40,12 @@
         :aria-label="slide.name"
       >
         <img
-          :src="slide.images?.[0] || slide.imageURL || 'https://via.placeholder.com/400x400?text=Imagine+Produs'"
-          :alt="slide.name"
+          :src="slide.images?.[0] || slide.imageURL || slide.image || '/default-product.png'"
+          :alt="slide.name || 'Produs'"
           class="object-cover rounded-lg select-none shadow-xl cursor-pointer"
           draggable="false"
           style="width: 100%; height: 100%;"
+          @error="$event.target.src = '/default-product.png'"
         />
         <!-- Colț stânga sus: Locul în clasament -->
         <div :class="[
@@ -72,6 +84,7 @@
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
       </svg>
     </button>
+    </template> <!-- Închide template-ul v-else -->
   </div>
 </template>
 
@@ -90,25 +103,60 @@ export default {
       isMobile: false
     }
   },
+  watch: {
+    products: {
+      handler(newProducts) {
+        console.log('CarouselShop: products prop changed:', newProducts.length, newProducts)
+        this.$nextTick(() => {
+          console.log('CarouselShop: topProducts computed:', this.topProducts.length)
+          console.log('CarouselShop: visibleSlides computed:', this.visibleSlides.length)
+        })
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   computed: {
     topProducts() {
+      // Pentru cazul în care nu vine nimic de la părinte, folosește produsele directe
+      if (!this.products || this.products.length === 0) {
+        console.log('No products passed to carousel')
+        return []
+      }
+      
       // Filtrare: doar produsele din luna curentă și care NU sunt în expoziție
       const now = new Date()
       const firstDay = new Date(now.getFullYear(), now.getMonth(), 1)
       const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+      
+      console.log('CarouselShop: filtering products from', firstDay, 'to', lastDay)
+      
+      // TEMPORAR: pentru testare, nu filtra după lună
       const productsThisMonth = this.products.filter(p => {
-        if (!p.createdAt || p.expo) return false // <-- exclude expo
-        const created = p.createdAt.seconds ? new Date(p.createdAt.seconds * 1000) : new Date(p.createdAt)
-        return created >= firstDay && created <= lastDay
+        if (!p || p.expo) return false // exclude expo
+        // Comentez temporar filtrarea pe lună pentru testare
+        // if (!p.createdAt) return false
+        // const created = p.createdAt.seconds ? new Date(p.createdAt.seconds * 1000) : new Date(p.createdAt)
+        // return created >= firstDay && created <= lastDay
+        return true // temporar: acceptă toate produsele
       })
+      
+      console.log('Products after date filter:', productsThisMonth.length)
+      
       // Sortează după like-uri
       productsThisMonth.sort((a, b) => (b.likedBy?.length || 0) - (a.likedBy?.length || 0))
+      
       // Ia doar primele 10
-      return productsThisMonth.slice(0, 10)
+      const result = productsThisMonth.slice(0, 10)
+      console.log('Final topProducts in carousel:', result.length, result)
+      
+      return result
     },
     visibleSlides() {
       // Folosește topProducts în loc de this.products
-      const validProducts = this.topProducts.filter(p => p.id && (p.images?.[0] || p.imageURL))
+      const validProducts = this.topProducts.filter(p => 
+        p.id && (p.images?.[0] || p.imageURL || p.image)
+      )
       const len = validProducts.length
       if (len === 0) return []
       const prev = (this.currentIndex - 1 + len) % len
@@ -185,6 +233,12 @@ export default {
     this.handleResize()
     window.addEventListener('resize', this.handleResize)
     this.startAutoplay()
+    
+    console.log('CarouselShop mounted, products received:', this.products.length)
+    console.log('Products data:', this.products)
+    console.log('Top products computed:', this.topProducts.length)
+    console.log('Visible slides computed:', this.visibleSlides.length)
+    
     // DEBUG: vezi dacă ai duplicate sau lipsă
     const ids = this.products.map(p => p.id)
     const hasDuplicates = ids.length !== new Set(ids).size
@@ -192,7 +246,7 @@ export default {
       console.warn('Ai produse cu id duplicat în carousel!')
     }
     this.products.forEach(p => {
-      if (!p.imageURL) {
+      if (!p.imageURL && !p.images?.[0] && !p.image) {
         console.warn('Produs fără imagine:', p)
       }
       if (!p.id) {

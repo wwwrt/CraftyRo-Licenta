@@ -32,7 +32,7 @@
         </div>
         <img
           v-else
-          :src="product.imageURL || 'https://via.placeholder.com/400x400?text=Imagine+Produs'"
+          :src="product.imageURL || 'https://placehold.co/400x400?text=Imagine+Produs'"
           alt="Product Image"
           class="rounded-2xl shadow-lg w-full max-w-xs h-80 object-cover"
         />
@@ -137,7 +137,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue' 
 import { useRoute, useRouter } from 'vue-router'
 import { doc, getDoc, collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, deleteDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { db } from '@/firebaseconfig'
@@ -178,28 +178,48 @@ const categories = [
   { key: 'altele', label: 'Altele' }
 ]
 
-// Obține detaliile produsului la montare
-onMounted(async () => {
-  const productId = route.params.id
+// 2. NOU: Funcție refactorizată pentru a încărca datele produsului
+const fetchProductData = async (productId) => {
+  if (!productId) return;
+
+  // Resetează starea pentru a afișa o pagină curată în timpul încărcării
+  product.value = {};
+  sellerName.value = '';
+  sellerId.value = '';
+  currentImageIndex.value = 0;
+
   try {
-    const productDoc = await getDoc(doc(db, 'products', productId))
+    const productDoc = await getDoc(doc(db, 'products', productId));
     if (productDoc.exists()) {
-      const prod = { id: productDoc.id, ...productDoc.data() }
-      prod.categoryLabel = categories.find(c => c.key === prod.category)?.label
-      product.value = prod
+      const prod = { id: productDoc.id, ...productDoc.data() };
+      prod.categoryLabel = categories.find(c => c.key === prod.category)?.label;
+      product.value = prod;
 
       if (prod.userId) {
-        sellerId.value = prod.userId
-        const userDoc = await getDoc(doc(db, 'users', prod.userId))
+        sellerId.value = prod.userId;
+        const userDoc = await getDoc(doc(db, 'users', prod.userId));
         if (userDoc.exists()) {
-          sellerName.value = userDoc.data().displayName || userDoc.data().name || 'Nespecificat'
+          sellerName.value = userDoc.data().displayName || userDoc.data().name || 'Nespecificat';
         }
       }
     }
   } catch (error) {
-    console.error('Failed to fetch product details:', error)
+    console.error('Failed to fetch product details:', error);
   }
-})
+};
+
+// 3. ACTUALIZAT: onMounted apelează noua funcție
+onMounted(() => {
+  fetchProductData(route.params.id);
+});
+
+// 4. NOU: Urmărește schimbările în ID-ul produsului din URL și reîncarcă datele
+watch(() => route.params.id, (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    fetchProductData(newId);
+  }
+});
+
 
 // Funcție pentru a începe o conversație cu vânzătorul
 async function startConversation() {

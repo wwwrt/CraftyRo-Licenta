@@ -121,23 +121,73 @@ const currentMonth = new Date().toLocaleString('ro-RO', { month: 'long' })
 
 const topProducts = ref([])
 
+// TEMPORAR: Mock data pentru testarea carousel-ului
+const mockProducts = [
+  {
+    id: '1',
+    name: 'Produs Test 1',
+    imageURL: '/default-product.png',
+    likedBy: ['user1', 'user2', 'user3'],
+    expo: false
+  },
+  {
+    id: '2', 
+    name: 'Produs Test 2',
+    imageURL: '/default-product.png',
+    likedBy: ['user1', 'user2'],
+    expo: false
+  },
+  {
+    id: '3',
+    name: 'Produs Test 3', 
+    imageURL: '/default-product.png',
+    likedBy: ['user1'],
+    expo: false
+  }
+]
+
 function listenTopProductsCurrentMonth() {
-  const now = new Date()
-  const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-  const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+  // TEMPORAR: folosește mock data dacă Firebase nu funcționează
+  console.log('Trying to connect to Firebase...')
+  
+  try {
+    const q = query(collection(db, 'products'))
 
-  const q = query(
-    collection(db, 'products'),
-    where('createdAt', '>=', firstDayThisMonth),
-    where('createdAt', '<=', lastDayThisMonth)
-  )
-
-  // Ascultă în timp real modificările
-  onSnapshot(q, (snapshot) => {
-    const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-    products.sort((a, b) => (b.likedBy?.length || 0) - (a.likedBy?.length || 0))
-    topProducts.value = products.slice(0, 10)
-  })
+    onSnapshot(q, (snapshot) => {
+      console.log('Firebase snapshot received, docs count:', snapshot.docs.length)
+      
+      if (snapshot.docs.length === 0) {
+        console.log('No products from Firebase, using mock data')
+        topProducts.value = mockProducts
+        return
+      }
+      
+      const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      console.log('All products:', products.length)
+      
+      // TEMPORAR: ia toate produsele pentru test (nu doar din luna curentă)
+      const validProducts = products.filter(p => {
+        const hasImage = p.images?.[0] || p.imageURL || p.image
+        const hasId = p.id
+        console.log(`Product ${p.name || p.id}: hasId=${hasId}, hasImage=${!!hasImage}`)
+        return hasId && hasImage && !p.expo // exclude expo
+      })
+      
+      console.log('Valid products for carousel:', validProducts.length)
+      
+      // Sortează după like-uri și ia primele 10
+      validProducts.sort((a, b) => (b.likedBy?.length || 0) - (a.likedBy?.length || 0))
+      topProducts.value = validProducts.slice(0, 10)
+      
+      console.log('Top products final:', topProducts.value.length, topProducts.value)
+    }, (error) => {
+      console.error('Firebase error, using mock data:', error)
+      topProducts.value = mockProducts
+    })
+  } catch (error) {
+    console.error('Firebase connection failed, using mock data:', error)
+    topProducts.value = mockProducts
+  }
 }
 
 onMounted(listenTopProductsCurrentMonth)

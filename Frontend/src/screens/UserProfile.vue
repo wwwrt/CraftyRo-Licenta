@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { doc, getDoc, collection, query, where, getDocs, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { db } from '@/firebaseconfig'
@@ -74,6 +74,12 @@ const isDark = computed(() => ui.darkMode)
 
 onMounted(async () => {
   await fetchData()
+})
+
+watch(() => route.params.id, (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    fetchData()
+  }
 })
 
 async function fetchData() {
